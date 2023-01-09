@@ -28,6 +28,7 @@ condense:
     ratio_in: 9
     ratio_out: 1
 ```
+### Message:
 You can also customize the set of messages displayed by the plugin.</br>
 By default the messages displayed is in english, but you can change this message in the configuration file.</br>
 The messages are divided into several categories:</br>
