@@ -6,7 +6,7 @@
 
     <groupId>rd156.minecraft</groupId>
     <artifactId>condense</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>Condense</name>

@@ -1,32 +1,80 @@
 # TODO exemple item condense
 
-language: "fr"
+language: "en"
 
 display:
   list: true
 
 condense:
-  iron_nugget: true
-  gold_nugget: true
-  raw_iron: true
-  copper_ingot: true
-  iron_ingot: true
-  gold_ingot: true
-  netherite_ingot: true
-  diamond: true
-  emerald: true
-  redstone: true
-  lapis_lazuli: true
-  slime: true
-  snow: true
-  bone_meal: true
-  melon_slice: true
-  wheat: true
+  IRON_NUGGET:
+    output: IRON_INGOT
+    ratio_in: 9
+    ratio_out: 1
+  GOLD_NUGGET:
+    output: GOLD_INGOT
+    ratio_in: 9
+    ratio_out: 1
+  COPPER_INGOT:
+    output: COPPER_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  IRON_INGOT:
+    output: IRON_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  RAW_IRON:
+    output: RAW_IRON_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  GOLD_INGOT:
+    output: GOLD_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  NETHERITE_INGOT:
+    output: NETHERITE_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  DIAMOND:
+    output: DIAMOND_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  EMERALD:
+    output: EMERALD_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  REDSTONE:
+    output: REDSTONE_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  LAPIS_LAZULI:
+    output: LAPIS_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  SLIME_BALL:
+    output: SLIME_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  SNOWBALL:
+    output: SNOW_BLOCK
+    ratio_in: 4
+    ratio_out: 1
+  BONE_MEAL:
+    output: BONE_BLOCK
+    ratio_in: 9
+    ratio_out: 1
+  MELON_SLICE:
+    output: MELON
+    ratio_in: 9
+    ratio_out: 1
+  WHEAT:
+    output: HAY_BLOCK
+    ratio_in: 9
+    ratio_out: 1
 
 message:
   condense:
-    resume: "§a[number] items condensé dans votre inventaire"
-    item: "§a[item1] condensé en [item2]"
+    resume: "§a[number] items have been transformed."
+    item: "§a[item1] change into [item2]."
   error:
-    inventory_full: "§4Inventaire plein: impossible de condenser [item1] en [item2]"
-    ratio_zero: "§4Attention le ratio de conversion de [item1] est égal à 0"
+    inventory_full: "§4Inventory full: impossible to change [item1] into [item2]."
+    ratio_zero: "§4Attention the conversion ratio of [item1] is equal to 0."

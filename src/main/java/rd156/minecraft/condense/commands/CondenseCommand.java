@@ -1,21 +1,17 @@
 package rd156.minecraft.condense.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import rd156.minecraft.condense.CondensePlugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CondenseCommand implements CommandExecutor {
     private CondensePlugin main;
@@ -41,7 +37,6 @@ public class CondenseCommand implements CommandExecutor {
     private int condense(Player player)
     {
         Inventory inv = player.getInventory();
-        int nb_condense = 0;
         Map ItemQty = new HashMap();
         for (ItemStack item : inv.getContents()) {
             if (item == null){
@@ -57,67 +52,29 @@ public class CondenseCommand implements CommandExecutor {
             }
         }
 
-        nb_condense = condense_list(player, ItemQty);
+        int nb_condense = condense_list(player, ItemQty);
 
         player.updateInventory();
         return (nb_condense);
     }
     private int condense_list(Player player, Map ItemQty)
     {
-        int nb_condense = 0;
-
-        //nugget
-        if (main.getConfig().getBoolean("condense.iron_nugget") == true) {
-            nb_condense += change_item(player, Material.IRON_NUGGET, (Integer) ItemQty.get(Material.IRON_NUGGET), Material.IRON_INGOT, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.gold_nugget") == true) {
-            nb_condense += change_item(player, Material.GOLD_NUGGET, (Integer) ItemQty.get(Material.GOLD_NUGGET), Material.GOLD_INGOT, 9, 1);
-        }
-        //ingot
-        if (main.getConfig().getBoolean("condense.copper_ingot") == true) {
-            nb_condense += change_item(player, Material.COPPER_INGOT, (Integer) ItemQty.get(Material.COPPER_INGOT), Material.COPPER_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.iron_ingot") == true) {
-            nb_condense += change_item(player, Material.IRON_INGOT, (Integer) ItemQty.get(Material.IRON_INGOT), Material.IRON_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.raw_iron") == true) {
-            nb_condense += change_item(player, Material.RAW_IRON, (Integer) ItemQty.get(Material.RAW_IRON), Material.RAW_IRON_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.gold_ingot") == true) {
-            nb_condense += change_item(player, Material.GOLD_INGOT, (Integer) ItemQty.get(Material.GOLD_INGOT), Material.GOLD_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.netherite_ingot") == true) {
-            nb_condense += change_item(player, Material.NETHERITE_INGOT, (Integer) ItemQty.get(Material.NETHERITE_INGOT), Material.NETHERITE_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.diamond") == true) {
-            nb_condense += change_item(player, Material.DIAMOND, (Integer) ItemQty.get(Material.DIAMOND), Material.DIAMOND_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.emerald") == true) {
-            nb_condense += change_item(player, Material.EMERALD, (Integer) ItemQty.get(Material.EMERALD), Material.EMERALD_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.redstone") == true) {
-            nb_condense += change_item(player, Material.REDSTONE, (Integer) ItemQty.get(Material.REDSTONE), Material.REDSTONE_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.lapis_lazuli") == true) {
-            nb_condense += change_item(player, Material.LAPIS_LAZULI, (Integer) ItemQty.get(Material.LAPIS_LAZULI), Material.LAPIS_BLOCK, 9, 1);
-        }
-        //Autre
-        if (main.getConfig().getBoolean("condense.slime") == true) {
-            nb_condense += change_item(player, Material.SLIME_BALL, (Integer) ItemQty.get(Material.SLIME_BALL), Material.SLIME_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.snow") == true) {
-            nb_condense += change_item(player, Material.SNOWBALL, (Integer) ItemQty.get(Material.SNOWBALL), Material.SNOW_BLOCK, 4, 1);
-        }
-        if (main.getConfig().getBoolean("condense.bone_meal") == true) {
-            nb_condense += change_item(player, Material.BONE_MEAL, (Integer) ItemQty.get(Material.BONE_MEAL), Material.BONE_BLOCK, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.melon_slice") == true) {
-            nb_condense += change_item(player, Material.MELON_SLICE, (Integer) ItemQty.get(Material.MELON_SLICE), Material.MELON, 9, 1);
-        }
-        if (main.getConfig().getBoolean("condense.wheat") == true) {
-            nb_condense += change_item(player, Material.WHEAT, (Integer) ItemQty.get(Material.WHEAT), Material.HAY_BLOCK, 9, 1);
-        }
-        return (nb_condense);
+        AtomicInteger nb_condense = new AtomicInteger();
+        main.getConfig().getConfigurationSection("condense").getKeys(false).forEach(key -> {
+            Material material_in = Material.getMaterial(key.toUpperCase());
+            String name_out = main.getConfig().getString("condense." + key + ".output");
+            if (name_out != null)
+            {
+                Material material_out = Material.getMaterial(name_out.toUpperCase());
+                Integer ratio_in = main.getConfig().getInt("condense." + key + ".ratio_in");
+                Integer ratio_out = main.getConfig().getInt("condense." + key + ".ratio_out");
+                if (material_in != null && material_out != null)
+                {
+                    nb_condense.addAndGet(change_item(player, material_in, (Integer) ItemQty.get(material_in), material_out, ratio_in, ratio_out));
+                }
+            }
+        });
+        return (nb_condense.get());
     }
     private int change_item(Player player, Material input, Integer qtt_input, Material output, Integer ratio_input, Integer ratio_output)
     {
@@ -152,7 +109,6 @@ public class CondenseCommand implements CommandExecutor {
            if (value != null){
                item_overflow += value.getAmount();
            }
-           String item = String.valueOf(value.getType());
         }
         // Overflow
         if (item_overflow > 0)
@@ -161,8 +117,8 @@ public class CondenseCommand implements CommandExecutor {
             player.getInventory().addItem(new ItemStack(input, qtt_out * ratio_input));
             if (main.getConfig().getBoolean("display.list"))
             {
-                String item1 = String.valueOf(qtt_input - qtt_rest) + " " + input;
-                String item2 = String.valueOf(qtt_out) + " " + output;
+                String item1 = (qtt_input - qtt_rest) + " " + input;
+                String item2 = qtt_out + " " + output;
                 String message = main.getConfig().getString("message.error.inventory_full").replace("[item1]", item1).replace("[item2]", item2);
                 player.sendMessage(message);
             }
@@ -175,8 +131,8 @@ public class CondenseCommand implements CommandExecutor {
             player.getInventory().addItem(new ItemStack(input, qtt_rest));
             if (main.getConfig().getBoolean("display.list"))
             {
-                String item1 = String.valueOf(qtt_input - qtt_rest) + " " + input;
-                String item2 = String.valueOf(qtt_out) + " " + output;
+                String item1 = (qtt_input - qtt_rest) + " " + input;
+                String item2 = qtt_out + " " + output;
                 String message = main.getConfig().getString("message.condense.item").replace("[item1]", item1).replace("[item2]", item2);
                 player.sendMessage(message);
             }
