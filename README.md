@@ -9,14 +9,14 @@
 ### Configuration:
 
 The configuration file is in the "Condense" folder in the plugins part of your server. </br>
-In it you can activate the display of a message for each transformation. (Display->List)</br>
+Inside you can activate the display of a message for each transformation.</br>
 ```yml
 display:
   list: true
 ```
 
 ### List of item that you can condense:
-You can add every element that you want change with condense command. If you remove the block of one condense this items can not be condense with this command.</br>
+You can add every element that you want change with condense command. If you remove the block of one condense this items can not be condensed with this command.</br>
 ```yml
 condense:
   IRON_NUGGET:
@@ -29,7 +29,7 @@ condense:
     ratio_out: 1
 ```
 You can also customize the set of messages displayed by the plugin.</br>
-By default the messages displayed is in english but you can change this message in the configuration file.</br>
+By default the messages displayed is in english, but you can change this message in the configuration file.</br>
 The messages are divided into several categories:</br>
 The error messages found in the part error</br>
 The status messages found in the part condense</br>
